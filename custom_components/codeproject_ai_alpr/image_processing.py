@@ -37,11 +37,9 @@ CONF_SAVE_TIMESTAMPTED_FILE = "save_timestamped_file"
 CONF_ALWAYS_SAVE_LATEST_FILE = "always_save_latest_file"
 CONF_WATCHED_PLATES = "watched_plates"
 CONF_SERVER = "server"
-CONF_DETECTION_RULE = "detection_rule"
 
 DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 RED = (255, 0, 0)  # For objects within the ROI
-DEFAULT_REGIONS = ['None']
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
