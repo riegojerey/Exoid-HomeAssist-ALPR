@@ -37,6 +37,7 @@ CONF_SAVE_TIMESTAMPTED_FILE = "save_timestamped_file"
 CONF_ALWAYS_SAVE_LATEST_FILE = "always_save_latest_file"
 CONF_WATCHED_PLATES = "watched_plates"
 CONF_SERVER = "server"
+CONF_UNIQUE_ID = "unique_id" 
 
 DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 RED = (255, 0, 0)  # For objects within the ROI
@@ -44,6 +45,7 @@ RED = (255, 0, 0)  # For objects within the ROI
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_SERVER): cv.string,
+        vol.Optional(CONF_UNIQUE_ID): cv.string,
         vol.Optional(CONF_SAVE_FILE_FOLDER): cv.isdir,
         vol.Optional(CONF_SAVE_TIMESTAMPTED_FILE, default=False): cv.boolean,
         vol.Optional(CONF_ALWAYS_SAVE_LATEST_FILE, default=False): cv.boolean,
@@ -70,6 +72,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             camera_entity=camera[CONF_ENTITY_ID],
             name=camera.get(CONF_NAME),
             server=config.get(CONF_SERVER),
+            unique_id=config.get(CONF_UNIQUE_ID),
 
         )
         entities.append(codeproject_ai_alpr)
@@ -88,6 +91,7 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
         camera_entity,
         name,
         server,
+        unique_id,
     ):
         """Init."""
         self._headers = ""
@@ -110,6 +114,7 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
         self._image_height = None
         self._image = None
         self._config = {}
+        self._unique_id = unique_id
 
     def process_image(self, image):
         """Process an image."""
@@ -194,6 +199,11 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
     def name(self):
         """Return the name of the sensor."""
         return self._name
+
+    @property
+    def unique_id(self):
+        """Return the unique id of the sensor."""
+        return self._unique_id
 
     @property
     def should_poll(self):
