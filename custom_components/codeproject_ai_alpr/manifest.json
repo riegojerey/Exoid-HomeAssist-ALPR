@@ -1,0 +1,11 @@
+{
+        "domain": "codeproject_ai_alpr",
+        "name": "codeproject_ai_alpr custom integration",
+        "documentation": "https://github.com/grinco/CodeProject.AI-HomeAssist-ALPR",
+        "version": "1.0.0",
+        "requirements": ["pillow", "requests"],
+        "dependencies": [],
+        "codeowners": [
+                "@grinco"
+        ]
+}

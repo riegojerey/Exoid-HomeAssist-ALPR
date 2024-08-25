@@ -25,7 +25,7 @@ from homeassistant.util.pil import draw_box
 
 _LOGGER = logging.getLogger(__name__)
 
-EVENT_VEHICLE_DETECTED = "platerecognizer.vehicle_detected"
+EVENT_VEHICLE_DETECTED = "codeproject_ai_alpr.vehicle_detected"
 
 ATTR_PLATE = "plate"
 ATTR_CONFIDENCE = "confidence"
@@ -64,7 +64,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     entities = []
     for camera in config[CONF_SOURCE]:
-        platerecognizer = PlateRecognizerEntity(
+        codeproject_ai_alpr = codeproject_ai_alprEntity(
             save_file_folder=save_file_folder,
             save_timestamped_file=config.get(CONF_SAVE_TIMESTAMPTED_FILE),
             always_save_latest_file=config.get(CONF_ALWAYS_SAVE_LATEST_FILE),
@@ -74,11 +74,11 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             server=config.get(CONF_SERVER),
 
         )
-        entities.append(platerecognizer)
+        entities.append(codeproject_ai_alpr)
     add_entities(entities)
 
 
-class PlateRecognizerEntity(ImageProcessingEntity):
+class codeproject_ai_alprEntity(ImageProcessingEntity):
     """Create entity."""
 
     def __init__(
@@ -98,7 +98,7 @@ class PlateRecognizerEntity(ImageProcessingEntity):
             self._name = name
         else:
             camera_name = split_entity_id(camera_entity)[1]
-            self._name = f"platerecognizer_{camera_name}"
+            self._name = f"codeproject_ai_alpr_{camera_name}"
         self._save_file_folder = save_file_folder
         self._save_timestamped_file = save_timestamped_file
         self._always_save_latest_file = always_save_latest_file
@@ -139,8 +139,8 @@ class PlateRecognizerEntity(ImageProcessingEntity):
                 for r in self._results
             ]
         except Exception as exc:
-            _LOGGER.error("platerecognizer error: %s", exc)
-            _LOGGER.error(f"platerecognizer api response: {response}")
+            _LOGGER.error("codeproject_ai_alpr error: %s", exc)
+            _LOGGER.error(f"codeproject_ai_alpr api response: {response}")
 
         self._state = len(self._vehicles)
         if self._state > 0:
@@ -185,7 +185,7 @@ class PlateRecognizerEntity(ImageProcessingEntity):
         if self._save_timestamped_file:
             timestamp_save_path = self._save_file_folder / f"{self._name}_{self._last_detection}.png"
             self._image.save(timestamp_save_path)
-            _LOGGER.info("platerecognizer saved file %s", timestamp_save_path)
+            _LOGGER.info("codeproject_ai_alpr saved file %s", timestamp_save_path)
 
     @property
     def camera_entity(self):
