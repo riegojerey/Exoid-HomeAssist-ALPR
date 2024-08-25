@@ -1,4 +1,4 @@
-# CodeProject.AI Home Assistant Object Detection custom component
+# CodeProject.AI Home Assistant License Plate Reader custom component
 
 This component is a direct port of the [HASS-plate-recognizer](https://github.com/robmarkcole/HASS-plate-recognizer) component by [Robin Cole](https://github.com/robmarkcole). This component provides AI-based Object Detection capabilities using [CodeProject.AI Server](https://codeproject.com/ai). 
 
