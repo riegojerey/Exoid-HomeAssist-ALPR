@@ -1,5 +1,11 @@
 # HASS-plate-recognizer
-Read vehicle license plates with [Plate Recognizer ALPR](https://platerecognizer.com/) which offers free processing of 2500 images per month. You will need to create an account and get your API token.
+# CodeProject.AI Home Assistant Object Detection custom component
+
+This component is a direct port of the [HASS-plate-recognizer](https://github.com/robmarkcole/HASS-plate-recognizer) component by [Robin Cole](https://github.com/robmarkcole). This component provides AI-based Object Detection capabilities using [CodeProject.AI Server](https://codeproject.com/ai). 
+
+ [CodeProject.AI Server](https://codeproject.com/ai) is a service which runs either in a Docker container or as a Windows Service and exposes various an API for many AI inferencing operations via a REST API. The Object Detection capabilities use the [YOLO](https://arxiv.org/pdf/1506.02640.pdf) algorithm as implemented by Ultralytics and others. It can identify 80 different kinds of objects by default, but custom models are also available that focus on specific objects such as animals, license plates or objects typically encountered by home webcams. CodeProject.AI Server is free, locally installed, and can run without an external internet connection, is is comatible with Windows, Linux, macOS. It can run on Raspberry Pi, and supports CUDA and embedded Intel GPUs.
+
+On the machine in which you are running CodeProject.AI server, either ensure the service is running, or if using Docker, [start a Docker container](https://www.codeproject.com/ai/docs/why/running_in_docker.html#launching-a-container). 
 
 This integration adds an image processing entity where the state of the entity is the number of license plates found in a processed image. Information about the vehicle which has the license plate is provided in the entity attributes, and includes the license plate number, [region/country](http://docs.platerecognizer.com/#countries), vehicle type, and confidence (in a scale 0 to 1) in this prediction. For each vehicle an `platerecognizer.vehicle_detected` event is fired, containing the same information just listed. Additionally, statistics about your account usage are given in the `Statistics` attribute, including the number of `calls_remaining` out of your 2500 monthly available.
 
