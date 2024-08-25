@@ -115,6 +115,7 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
         self._image = None
         self._config = {}
         self._unique_id = unique_id
+        self._inference_time = None
 
     def process_image(self, image):
         """Process an image."""
@@ -132,6 +133,7 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
                 headers=self._headers
             ).json()
             self._results = response["predictions"]
+            self._inference_time = response["inferenceMs"]
             self._vehicles = [
                 {
                     ATTR_PLATE: r["plate"],
@@ -234,6 +236,7 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
                     watched_plates_results.update({plate: True})
             attr[CONF_WATCHED_PLATES] = watched_plates_results
         attr[CONF_SERVER] = str(self._server)
+        attr.update({"inference_time": self._inference_time})
         if self._save_file_folder:
             attr[CONF_SAVE_FILE_FOLDER] = str(self._save_file_folder)
             attr[CONF_SAVE_TIMESTAMPTED_FILE] = self._save_timestamped_file

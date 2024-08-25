@@ -2,7 +2,7 @@
         "domain": "codeproject_ai_alpr",
         "name": "CodeProject.AI Server ALPR custom integration",
         "documentation": "https://github.com/grinco/CodeProject.AI-HomeAssist-ALPR",
-        "version": "0.1.1",
+        "version": "0.2.0",
         "iot_class": "local_polling",
         "requirements": ["pillow", "requests"],
         "dependencies": [],
