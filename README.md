@@ -1,4 +1,3 @@
-# HASS-plate-recognizer
 # CodeProject.AI Home Assistant Object Detection custom component
 
 This component is a direct port of the [HASS-plate-recognizer](https://github.com/robmarkcole/HASS-plate-recognizer) component by [Robin Cole](https://github.com/robmarkcole). This component provides AI-based Object Detection capabilities using [CodeProject.AI Server](https://codeproject.com/ai). 
@@ -7,13 +6,7 @@ This component is a direct port of the [HASS-plate-recognizer](https://github.co
 
 On the machine in which you are running CodeProject.AI server, either ensure the service is running, or if using Docker, [start a Docker container](https://www.codeproject.com/ai/docs/why/running_in_docker.html#launching-a-container). 
 
-This integration adds an image processing entity where the state of the entity is the number of license plates found in a processed image. Information about the vehicle which has the license plate is provided in the entity attributes, and includes the license plate number, [region/country](http://docs.platerecognizer.com/#countries), vehicle type, and confidence (in a scale 0 to 1) in this prediction. For each vehicle an `platerecognizer.vehicle_detected` event is fired, containing the same information just listed. Additionally, statistics about your account usage are given in the `Statistics` attribute, including the number of `calls_remaining` out of your 2500 monthly available.
-
-If you have a paid plan that includes MMC (Make/Model/Colour) data you can received the orientation of the vehicle in the entity attributes.
-
-You can also forward the LPR results straight to [ParkPow](https://parkpow.com), a parking management software and sister-company to Plate Recognizer.
-
-If you have a local SDK licence, you can optionally specify the server address.
+This integration adds an image processing entity where the state of the entity is the number of license plates found in a processed image. Information about the vehicle which has the license plate is provided in the entity attributes, and includes the license plate number, and confidence (in a scale 0 to 1) in this prediction. For each vehicle an `platerecognizer.vehicle_detected` event is fired, containing the same information just listed. 
 
 **Note** this integration does NOT automatically process images, it is necessary to call the `image_processing.scan` service to trigger processing.
 
@@ -23,20 +16,13 @@ Place the `custom_components` folder in your configuration directory (or add its
 ```yaml
 image_processing:
   - platform: platerecognizer
-    api_token: your_token
-    regions:
-      - gb
-      - ie
     watched_plates:
       - kbw46ba
       - kfab726
     save_file_folder: /config/images/platerecognizer/
     save_timestamped_file: True
     always_save_latest_file: True
-    mmc: True
-    detection_rule: strict
-    region: strict
-    server: http://yoururl:8080/v1/plate-reader/
+    server: http://yoururl:8080/v1/vision/alpr/
 
     source:
       - entity_id: camera.yours
@@ -44,18 +30,11 @@ image_processing:
 Then, **restart** your Home Assistant
 
 Configuration variables:
-- **api_key**: Your api key.
-- **regions**: (Optional) A list of [regions/countries](http://docs.platerecognizer.com/?python#countries) to filter by. Note this may return fewer, but more specific predictions.
 - **watched_plates**: (Optional) A list of number plates to watch for, which will identify a plate even if a couple of digits are incorrect in the prediction (fuzzy matching). If configured this adds an attribute to the entity with a boolean for each watched plate to indicate if it is detected.
 - **save_file_folder**: (Optional) The folder to save processed images to. Note that folder path should be added to [whitelist_external_dirs](https://www.home-assistant.io/docs/configuration/basic/)
 - **save_timestamped_file**: (Optional, default `False`, requires `save_file_folder` to be configured) Save the processed image with the time of detection in the filename.
 - **always_save_latest_file**: (Optional, default `False`, requires `save_file_folder` to be configured) Always save the last processed image, no matter there were detections or not.
-- **mmc**: (Optional, default `False`, requires a [paid plan](https://platerecognizer.com/pricing/) with the MMC (Make, Model, Colour) feature enabled.)  If enabled returns the orientation of the vehicle as a separate attribute containing Front/Rear/Unknown.
-- **detection_rule**: (Optional) If set to `strict`, the license plates that are detected outside a vehicle will be discarded.
-- **region**: (Optional) If set to `strict`, only accept the results that exactly match the templates of the specified region. For example, if the license plate of a region is 3 letters and 3 numbers, the value abc1234 will be discarded. For regions with vanity license plates (e.g. in us-ca), we do not recommend the use of Strict Mode. Otherwise, the engine will discard the vanity plates.
 - **server**: (Optional, requires a [paid plan](https://platerecognizer.com/pricing/) Provide a local server address to use [On-Premise SDK](https://docs.platerecognizer.com/#on-premise-sdk)
-
-
 - **source**: Must be a camera.
 
 <p align="center">
