@@ -17,14 +17,12 @@ Place the `custom_components` folder in your configuration directory (or add its
 image_processing:
   - platform: codeproject_ai_alpr
     server: http://yoururl:8080/v1/vision/alpr/
-    watched_plates:
-      - kbw46ba
-      - kfab726
     save_file_folder: /config/images/codeproject_ai_alpr/
     save_timestamped_file: True
     always_save_latest_file: True
     source:
       - entity_id: camera.yours
+
 ```
 Then, **restart** your Home Assistant
 
@@ -46,5 +44,7 @@ sensor:
     sensors:
       my_plate:
         friendly_name: "kbw46ba"
-        value_template: "{{ state_attr("image_processing.codeproject_ai_alpr_1", "watched_plates")["kbw46ba"] }}"
+        value_template: >
+          {{ "kbw46ba" in state_attr("image_processing.codeproject_ai_alpr_1", "detected_plates") }}
+
 ```
