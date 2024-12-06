@@ -163,15 +163,16 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
             _LOGGER.error(f"codeproject_ai_alpr api response: {response}")
 
         self._state = len(self._vehicles)
+        any_plate_detected = False
         if self._state > 0:
             self._last_detection = dt_util.now().strftime(DATETIME_FORMAT)
             for vehicle in self._vehicles:
                 self.fire_vehicle_detected_event(vehicle)
                 if vehicle[ATTR_PLATE] in self._watched_plates:
-                    self.update_watched_plate_state(vehicle[ATTR_PLATE], True)
-        else:
-            for plate in self._watched_plates:
-                self.update_watched_plate_state(plate, False)
+                    any_plate_detected = True
+
+        # Update the state of the single binary sensor for any watched plate detected
+        self.update_any_plate_state(any_plate_detected)
 
         if self._save_file_folder:
             if self._state > 0 or self._always_save_latest_file:
@@ -183,16 +184,16 @@ class codeproject_ai_alprEntity(ImageProcessingEntity):
         vehicle_copy.update({ATTR_ENTITY_ID: self.entity_id})
         self.hass.bus.fire(EVENT_VEHICLE_DETECTED, vehicle_copy)
 
-    def update_watched_plate_state(self, plate, detected):
-        """Update the state of the watched plate as a binary sensor."""
-        entity_id = f"binary_sensor.license_plate_{plate.lower().replace(' ', '_')}"
+    def update_any_plate_state(self, detected):
+        """Update the state of a single binary sensor for any watched plate detected."""
+        entity_id = "binary_sensor.any_license_plate_detected"
         state = "on" if detected else "off"
 
         self._hass.states.set(
             entity_id,
             state,
             {
-                "friendly_name": f"License Plate {plate} Detected",
+                "friendly_name": "Any Watched License Plate Detected",
                 "detected": detected,
             }
         )
